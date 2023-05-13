@@ -1,4 +1,4 @@
-#게시판 주요기능
+# 게시판 주요기능
 
 1. 글쓰기(/board/save)
 2. 글목록(/board)
@@ -12,3 +12,14 @@
 6. 페이징처리(/board/paging)
    - /board/paging?page=2
    - /board/paging/2
+7. 파일(이미지)첨부
+   - 단일 파일 첨부
+   - 다중 파일 첨부
+   - 파일 첨부와 관련하여 추가될 부분들
+     - save.html
+     - BoardDto
+     - BoardService.save()
+     - BoardEntity
+     - BoardFileEntity, BoardFileRepository 추가
+     - detail.html
+   - github에서의 코드의 변경점을 잘 살펴보기.
