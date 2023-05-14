@@ -43,21 +43,24 @@ public class BoardService {
             해당 경로에 파일 저장
             board_table에 해당 데이터 save
             board_file_table에 해당 데이터 save*/
-            MultipartFile boardFile=boardDTO.getBoardFile();// 1
-            String originalFileName=boardFile.getOriginalFilename();//2
-            String storedFilename=System.currentTimeMillis()+"_"+originalFileName;//3
-            String savePath="C:/springboot_img/"+storedFilename;//4
-            boardFile.transferTo(new File(savePath));//5
             BoardEntity boardEntity=BoardEntity.toSaveFileEntity(boardDTO);
             Long savedId=boardRepository.save(boardEntity).getId();//부모 id
             BoardEntity board=boardRepository.findById(savedId).get();//부모 엔티티
+            for(MultipartFile boardFile:boardDTO.getBoardFile()){
+/*                MultipartFile boardFile=boardDTO.getBoardFile();// 1*/
+                String originalFileName=boardFile.getOriginalFilename();//2
+                String storedFilename=System.currentTimeMillis()+"_"+originalFileName;//3
+                String savePath="C:/springboot_img/"+storedFilename;//4
+                boardFile.transferTo(new File(savePath));//5
+                BoardFileEntity boardFileEntity=BoardFileEntity.toBoardFileEntity(boardEntity,originalFileName,storedFilename);
+                boardFileRepository.save(boardFileEntity);
+            }
 
-            BoardFileEntity boardFileEntity=BoardFileEntity.toBoardFileEntity(boardEntity,originalFileName,storedFilename);
-            boardFileRepository.save(boardFileEntity);
 
         }
     }
 
+    @Transactional
     public List<BoardDTO> findAll() {
         List<BoardEntity> boardEntityList = boardRepository.findAll();
         List<BoardDTO> boardDTOList = new ArrayList<>();
@@ -72,6 +75,7 @@ public class BoardService {
         boardRepository.updateHits(id);
     }
 
+    @Transactional
     public BoardDTO findById(Long id) {
         Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
         if (optionalBoardEntity.isPresent()) {
