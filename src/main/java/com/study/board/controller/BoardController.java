@@ -1,7 +1,9 @@
 package com.study.board.controller;
 
 import com.study.board.dto.BoardDTO;
+import com.study.board.dto.CommentDTO;
 import com.study.board.service.BoardService;
+import com.study.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
+    private final CommentService commentService;
 
     @GetMapping("/save")
     public String saveForm() {
@@ -48,6 +51,9 @@ public class BoardController {
          */
         boardService.updateHits(id);
         BoardDTO boardDTO = boardService.findById(id);
+        //댓글모록 가져오기
+        List<CommentDTO> commentDTOList=commentService.findAll(id);
+        model.addAttribute("commentList",commentDTOList);
         model.addAttribute("board", boardDTO);
         model.addAttribute("page", pageable.getPageNumber());
         return "detail";
@@ -90,14 +96,11 @@ public class BoardController {
         // 7 8 9
         // 보여지는 페이지 갯수 3개
         // 총 페이지 갯수 8개
-
         model.addAttribute("boardList", boardList);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         return "paging";
-
     }
-
 }
 
 

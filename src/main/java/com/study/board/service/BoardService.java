@@ -31,6 +31,7 @@ public class BoardService {
     private final BoardFileRepository boardFileRepository;
     public void save(BoardDTO boardDTO) throws IOException {
         //파일 첨부 여부에 따라 로직 분리
+        System.out.println("boardDTO = " + boardDTO);
         if(boardDTO.getBoardFile().isEmpty()) {
             //파일첨부 X
             BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO);
@@ -50,7 +51,10 @@ public class BoardService {
 /*                MultipartFile boardFile=boardDTO.getBoardFile();// 1*/
                 String originalFileName=boardFile.getOriginalFilename();//2
                 String storedFilename=System.currentTimeMillis()+"_"+originalFileName;//3
-                String savePath="C:/springboot_img/"+storedFilename;//4
+                //윈도우의 경우
+                /*String savePath="C:/springboot_img/"+storedFilename;//4*/
+                //맥의경우
+                String savePath="/Users/caurental2/springboot_img/"+storedFilename;
                 boardFile.transferTo(new File(savePath));//5
                 BoardFileEntity boardFileEntity=BoardFileEntity.toBoardFileEntity(boardEntity,originalFileName,storedFilename);
                 boardFileRepository.save(boardFileEntity);
